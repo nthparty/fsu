@@ -31,14 +31,15 @@ def configuration(uri: str, safe: bool = True) -> dict:
     """
 
     params = credentials(uri)
-    result = parse_qs(urlparse(uri).query)
 
-    for key, values in result.items():
+    db = for_db(uri)
+    if db is not None:
+        params["database"] = db
+
+    q_result = parse_qs(urlparse(uri).query)
+    for key, values in q_result.items():
         if len(values) == 1:
-            if not safe or key in [
-                "user", "password", "account",
-                "warehouse", "database", "schema"
-            ]:
+            if not safe or key == "warehouse":
                 params[key] = values[0]
 
     return params
