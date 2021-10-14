@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name="sfu",
     version="1.0.0",
-    packages=["sfu",],
+    packages=["sfu"],
     install_requires=[],
     license="MIT",
     url="https://github.com/nthparty/sfu",
