@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="b3u",
+    name="sfu",
     version="1.0.0",
     packages=["sfu",],
     install_requires=[],
