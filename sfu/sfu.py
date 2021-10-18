@@ -39,7 +39,7 @@ def configuration(uri: str, safe: bool = True) -> dict:
     q_result = parse_qs(urlparse(uri).query)
     for key, values in q_result.items():
         if len(values) == 1:
-            if not safe or key == "warehouse":
+            if not safe or key in ["warehouse", "schema", "role"]:
                 params[key] = values[0]
 
     return params
