@@ -47,6 +47,16 @@ The library provides methods for extracting configuration data (credentials and 
     cs.execute(f"USE WAREHOUSE {sfu.for_warehouse(uri)}")
     cs.execute(f"SELECT col1,col2 FROM {sfu.for_table(uri)}")
 
+Documentation
+-------------
+.. include:: toc.rst
+
+The documentation can be generated automatically from the source files using `Sphinx <https://www.sphinx-doc.org/>`_::
+
+    cd docs
+    python -m pip install -r requirements.txt
+    sphinx-apidoc -f -E --templatedir=_templates -o _source .. ../setup.py && make html
+
 Testing and Conventions
 -----------------------
 

@@ -1,12 +1,16 @@
 from setuptools import setup
 
 with open("README.md", "r") as fh:
-    long_description = fh.read()
+    long_description = fh.read().replace(".. include:: toc.rst\n\n", "")
+
+# The lines below can be parsed by `docs/conf.py`.
+name = "sfu"
+version = "1.0.2"
 
 setup(
-    name="sfu",
-    version="1.0.2",
-    packages=["sfu"],
+    name=name,
+    version=version,
+    packages=[name,],
     install_requires=[],
     license="MIT",
     url="https://github.com/nthparty/sfu",
