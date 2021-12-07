@@ -1,3 +1,8 @@
+"""
+Snowflake URI utility library that supports extraction of
+Snowflake configuration data and method parameters from
+Snowflake resource URIs.
+"""
 from __future__ import annotations
 from urllib.parse import urlparse, parse_qs
 
@@ -32,7 +37,7 @@ def configuration(uri: str, safe: bool = True) -> dict:
 
     params = credentials(uri)
 
-    db = for_db(uri)
+    db = for_db(uri) # pylint: disable=C0103
     if db is not None:
         params["database"] = db
 
