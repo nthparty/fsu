@@ -58,10 +58,18 @@ cs.execute(f"SELECT col1,col2 FROM {sfu.for_table(uri)}")
 
 ## Testing and Conventions
 
-All unit tests are executed when using `pytest`:
+All unit tests are executed and their coverage is measured when using [pytest](https://pytest.org):
 
 ```shell
-pytest tests/test.py
+python -m pip install pytest pytest-cov .
+python -m pytest --cov=sfu tests/test.py
+```
+
+Style conventions are enforced using [Pylint](https://www.pylint.org/):
+
+```shell
+python -m pip install pylint
+pylint sfu
 ```
 
 ## Contributions
