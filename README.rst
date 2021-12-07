@@ -1,17 +1,21 @@
 ===
 sfu
 ===
+
 Snowflake URI utility library that supports extraction of Snowflake configuration data and method parameters from Snowflake resource URIs.
 
+|readthedocs|
+
+.. |readthedocs| image:: https://readthedocs.org/projects/sfu/badge/?version=latest
+   :target: https://sfu.readthedocs.io/en/latest/?badge=latest
+   :alt: Read the Docs documentation status.
 
 Purpose
 -------
-
 When applications that employ the `Snowflake Python SDK <https://docs.snowflake.com/en/user-guide/python-connector.html>`_ must work with resources that are spread across multiple accounts, it can be useful to tie Snowflake configuration information (both credentials and resource data) directly tot associated Snowflake resources (*e.g.*, by including the  configuration data within URIs). This library provides methods that extract Snowflake configuration data and method  parameters from URIs, offering a succint syntax for passing (directly into Snowflake methods) configuration data and/or resource names that are included within URIs.
 
 Package Installation and Usage
 ------------------------------
-
 The package is available on PyPI::
 
     python -m pip install sfu
@@ -59,7 +63,6 @@ The documentation can be generated automatically from the source files using `Sp
 
 Testing and Conventions
 -----------------------
-
 All unit tests are executed and their coverage is measured when using `pytest <https://pytest.org>`_::
 
   python -m pip install pytest pytest-cov .
