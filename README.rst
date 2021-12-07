@@ -4,11 +4,15 @@ sfu
 
 Snowflake URI utility library that supports extraction of Snowflake configuration data and method parameters from Snowflake resource URIs.
 
-|readthedocs|
+|readthedocs| |actions|
 
 .. |readthedocs| image:: https://readthedocs.org/projects/sfu/badge/?version=latest
    :target: https://sfu.readthedocs.io/en/latest/?badge=latest
    :alt: Read the Docs documentation status.
+
+.. |actions| image:: https://github.com/nthparty/sfu/workflows/lint-test-cover-docs/badge.svg
+   :target: https://github.com/nthparty/sfu/actions/workflows/lint-test-cover-docs.yml
+   :alt: GitHub Actions status.
 
 Purpose
 -------
