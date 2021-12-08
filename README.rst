@@ -18,6 +18,10 @@ Snowflake URI utility library that supports extraction of Snowflake configuratio
    :target: https://github.com/nthparty/sfu/actions/workflows/lint-test-cover-docs.yml
    :alt: GitHub Actions status.
 
+.. |coveralls| image:: https://coveralls.io/repos/github/nthparty/sfu/badge.svg?branch=main
+   :target: https://coveralls.io/github/nthparty/sfu?branch=main
+   :alt: Coveralls test coverage summary.
+
 Purpose
 -------
 When applications that employ the `Snowflake Python SDK <https://docs.snowflake.com/en/user-guide/python-connector.html>`_ must work with resources that are spread across multiple accounts, it can be useful to tie Snowflake configuration information (both credentials and resource data) directly tot associated Snowflake resources (*e.g.*, by including the  configuration data within URIs). This library provides methods that extract Snowflake configuration data and method  parameters from URIs, offering a succint syntax for passing (directly into Snowflake methods) configuration data and/or resource names that are included within URIs.

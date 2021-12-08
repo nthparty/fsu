@@ -20,6 +20,13 @@ jobs:
           pip install -U pylint pytest pytest-cov .
           python -m pylint sfu # Check against linting rules.
           python -m pytest --cov=sfu tests/test.py # Run tests.
+      - name: Publish coverage results.
+        run: |
+          pip install -U pylint coveralls
+          python -m coveralls --service=github # Submit to coveralls.
+        if: matrix.python-version == '3.8'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Test auto-generation of documentation.
         run: |
           pip install -U -r docs/requirements.txt
