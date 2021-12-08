@@ -4,7 +4,11 @@ sfu
 
 Snowflake URI utility library that supports extraction of Snowflake configuration data and method parameters from Snowflake resource URIs.
 
-|readthedocs| |actions|
+|pypi| |readthedocs| |actions|
+
+.. |pypi| image:: https://badge.fury.io/py/sfu.svg
+   :target: https://badge.fury.io/py/sfu
+   :alt: PyPI version and link.
 
 .. |readthedocs| image:: https://readthedocs.org/projects/sfu/badge/?version=latest
    :target: https://sfu.readthedocs.io/en/latest/?badge=latest
