@@ -1,5 +1,5 @@
 """
-Snowflake URI utility library that supports extraction of
+Snowflake URI utility class that supports extraction of
 Snowflake configuration data and method parameters from
 Snowflake resource URIs.
 """
@@ -7,82 +7,170 @@ from __future__ import annotations
 from urllib.parse import urlparse, parse_qs
 
 
-def credentials(uri: str) -> dict:
-    """
-    Extract configuration data (only credentials) from a URI
-    """
+class sfu:
+    def __init__(self, uri: str):
+        params = {}
+        result = urlparse(uri)
 
-    params = {}
-    result = urlparse(uri)
+        # Init all possible default values to None
+        self.user = None
+        self.password = None
+        self.account = None
+        self.database = None
+        self.table = None
 
-    if result.username is not None and result.username != "":
-        params["user"] = result.username
+        if result.username is not None and result.username != '':
+            self.user = result.username
 
-    if result.password is not None and result.password != "":
+        if result.password is not None and result.password != '':
 
-        if ":" not in result.password:
-            params["password"] = result.password
-        else:
-            (password, account) = result.password.split(":")
-            params["password"] = password
-            params["account"] = account
+            if ':' not in result.password:
+                self.password = result.password
+            else:
+                (password, account) = result.password.split(':')
+                self.password = password
+                self.account = account
 
-    return params
+        if result.hostname is not None and result.hostname != '':
+            self.database = result.hostname
 
+        if result.path is not None and result.path != '':
+            self.table = result.path.lstrip('/')
 
-def configuration(uri: str, safe: bool = True) -> dict:
-    """
-    Extract configuration data (both credentials and non-credentials) from a URI
-    """
+        q_result = parse_qs(urlparse(uri).query)
 
-    params = credentials(uri)
+        # Pull values of q_result out of list structure
+        for key in q_result.keys():
+            # Only accept if list is of len 1
+            if len(q_result[key]) == 1:
+                q_result[key] = q_result[key][0]
 
-    db = for_db(uri) # pylint: disable=C0103
-    if db is not None:
-        params["database"] = db
+        # Extract other default properties from q_result
+        self.warehouse = q_result.pop('warehouse', None)
+        self.schema = q_result.pop('schema', None)
+        self.role = q_result.pop('role', None)
 
-    q_result = parse_qs(urlparse(uri).query)
-    for key, values in q_result.items():
-        if len(values) == 1:
-            if not safe or key in ["warehouse", "schema", "role"]:
-                params[key] = values[0]
+        # q_result should now only contain custom values
+        self.custom_params = q_result.keys()
 
-    return params
+        # Extract remaining properties (custom values given by user)
+        # so that they can be accessed by foo.<custom_parameter_name>
+        self._extract_custom_properties(q_result)
 
+    # Extract all custom values into properties
 
-def for_connection(uri: str, safe: bool = True) -> dict:
-    """
-    Extract all parameters for a connection constructor
-    """
-    return configuration(uri, safe)
+    def _extract_custom_properties(self, params: dict):
+        for key in params.keys():
+            setattr(self, key, params[key])
 
+    # Get current values of all originally entered custom values
+    def _get_custom_values(self) -> dict:
+        r = {}
 
-def for_db(uri: str) -> [str, None]:
-    """
-    Extract database name for a connection.cursor USE DATABASE <DB> command
-    """
+        for custom_key in self.custom_params:
+            r[custom_key] = getattr(self, custom_key)
 
-    result = urlparse(uri)
+        return r
 
-    if result.hostname is not None and result.hostname != "":
-        return result.hostname
-    return None
+    # Given a list of property names, creates a dictionary with structure property_name: value if value is not None
+    # If safe is false, includes all custom values as well
+    def _package_properties(self, property_list: list, safe: bool = True) -> dict:
+        result = {}
 
+        for key_val in property_list:
+            att_val = getattr(self, key_val)
+            if att_val is not None:
+                result[key_val] = att_val
 
-def for_warehouse(uri: str) -> [str, None]:
-    """
-    Extract warehouse name for a connection.cursor USE WAREHOUSE <WH> command
-    """
-    return configuration(uri, False).get("warehouse", None)
+        if not safe:
+            result.update(self._get_custom_values())
 
+        return result
 
-def for_table(uri: str) -> [str, None]:
-    """
-    Extract table name for a connection.cursor SELECT <COLS> FROM <TABLE> command
-    """
+    def credentials(self, safe: bool = True) -> dict:
+        """
+        Extract configuration data (only credentials) from a URI
+        """
 
-    result = urlparse(uri)
+        return self._package_properties(['user', 'password', 'account'], safe)
 
-    if result.path is not None and result.path != "":
-        return result.path.lstrip("/")
-    return None
+    def configuration(self, safe: bool = True) -> dict:
+        """
+        Extract configuration data (both credentials and non-credentials) from a URI
+        """
+
+        return self._package_properties(['user', 'password', 'database', 'account', 'warehouse', 'schema', 'role'], safe)
+
+    def for_connection(self, safe: bool = True) -> dict:
+        """
+        Extract all parameters for a connection constructor
+        """
+        return self.configuration(safe)
+
+    def for_db(self) -> [str, None]:
+        """
+        Extract database name for a connection.cursor USE DATABASE <DB> command
+        """
+
+        return self.database
+
+    def for_warehouse(self) -> [str, None]:
+        """
+        Extract warehouse name for a connection.cursor USE WAREHOUSE <WH> command
+        """
+
+        return self.warehouse
+
+    def for_table(self) -> [str, None]:
+        """
+        Extract table name for a connection.cursor SELECT <COLS> FROM <TABLE> command
+        """
+
+        return self.table
+
+    def to_string(self) -> str:
+        """
+        Constructs a uri based off of current value of the properties of this object
+        """
+
+        new_uri = 'snow://'
+        contains_user_info = False
+
+        if self.user is not None:
+            contains_user_info = True
+            new_uri += self.user
+
+        if self.password is not None:
+            contains_user_info = True
+            new_uri += ':' + self.password
+
+        if self.account is not None:
+            contains_user_info = True
+            new_uri += ':' + self.account
+
+        if self.database is not None:
+            # Include @ iff there was user info included
+            if contains_user_info:
+                new_uri += '@'
+
+            new_uri += self.database
+
+            # Can only have a table if a db is specified
+            if self.table is not None:
+                new_uri += '/' + self.table
+
+        # Add in all parameters and custom values
+        parameters = self._package_properties(
+            ['warehouse', 'schema', 'role'], False)
+
+        first_param = True
+        for key in parameters:
+            if first_param:
+                new_uri += '?'
+                first_param = False
+            else:
+                new_uri += '&'
+
+            new_uri += key + '=' + parameters[key]
+
+        return new_uri
