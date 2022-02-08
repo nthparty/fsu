@@ -9,7 +9,6 @@ from urllib.parse import urlparse, parse_qs
 
 class sfu:
     def __init__(self, uri: str):
-        params = {}
         result = urlparse(uri)
 
         # Init all possible default values to None
@@ -65,15 +64,15 @@ class sfu:
 
     # Get current values of all originally entered custom values
     def _get_custom_values(self) -> dict:
-        r = {}
+        custom_dict = {}
 
         for custom_key in self.custom_params:
-            r[custom_key] = getattr(self, custom_key)
+            custom_dict[custom_key] = getattr(self, custom_key)
 
-        return r
+        return custom_dict
 
-    # Given a list of property names, creates a dictionary with structure property_name: value if value is not None
-    # If safe is false, includes all custom values as well
+    # Given a list of property names, creates a dictionary with structure property_name: value 
+    # if value is not None. If safe is false, includes all custom values as well
     def _package_properties(self, property_list: list, safe: bool = True) -> dict:
         result = {}
 
@@ -99,7 +98,8 @@ class sfu:
         Extract configuration data (both credentials and non-credentials) from a URI
         """
 
-        return self._package_properties(['user', 'password', 'database', 'account', 'warehouse', 'schema', 'role'], safe)
+        return self._package_properties(
+            ['user', 'password', 'database', 'account', 'warehouse', 'schema', 'role'], safe)
 
     def for_connection(self, safe: bool = True) -> dict:
         """
