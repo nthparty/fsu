@@ -89,6 +89,12 @@ class sfu:
     def credentials(self, safe: bool = True) -> dict:
         """
         Extract configuration data (only credentials) from a URI
+
+        :param safe: If true, only return standard properties that can be passed to snowflake.
+            If false, returns custom values as well.
+
+        :return: A dictionary with the following keys (if available):
+            user, password, account
         """
 
         return self._package_properties(['user', 'password', 'account'], safe)
@@ -96,6 +102,12 @@ class sfu:
     def configuration(self, safe: bool = True) -> dict:
         """
         Extract configuration data (both credentials and non-credentials) from a URI
+
+        :param safe: If true, only return standard properties that can be passed to snowflake.
+            If false, returns custom values as well.
+
+        :return: A dictionary with the following keys (if available):
+            user, password, account, database, warehouse, schema, role
         """
 
         return self._package_properties(
@@ -104,12 +116,20 @@ class sfu:
     def for_connection(self, safe: bool = True) -> dict:
         """
         Extract all parameters for a connection constructor
+
+        :param safe: If true, only return standard properties that can be passed to snowflake.
+            If false, returns custom values as well.
+
+        :return: A dictionary with the following keys (if available):
+            user, password, account, database, warehouse, schema, role
         """
         return self.configuration(safe)
 
     def for_db(self) -> [str, None]:
         """
         Extract database name for a connection.cursor USE DATABASE <DB> command
+
+        :return: Database name
         """
 
         return self.database
@@ -117,6 +137,8 @@ class sfu:
     def for_warehouse(self) -> [str, None]:
         """
         Extract warehouse name for a connection.cursor USE WAREHOUSE <WH> command
+
+        :return: Warehouse name
         """
 
         return self.warehouse
@@ -124,6 +146,8 @@ class sfu:
     def for_table(self) -> [str, None]:
         """
         Extract table name for a connection.cursor SELECT <COLS> FROM <TABLE> command
+
+        :return: Table name
         """
 
         return self.table

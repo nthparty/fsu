@@ -24,7 +24,7 @@ Snowflake URI utility library that supports extraction of Snowflake configuratio
 
 Purpose
 -------
-When applications that employ the `Snowflake Python SDK <https://docs.snowflake.com/en/user-guide/python-connector.html>`_ must work with resources that are spread across multiple accounts, it can be useful to tie Snowflake configuration information (both credentials and resource data) directly tot associated Snowflake resources (*e.g.*, by including the  configuration data within URIs). This library provides methods that extract Snowflake configuration data and method  parameters from URIs, offering a succint syntax for passing (directly into Snowflake methods) configuration data and/or resource names that are included within URIs.
+When applications that employ the `Snowflake Python SDK <https://docs.snowflake.com/en/user-guide/python-connector.html>`_ must work with resources that are spread across multiple accounts, it can be useful to tie Snowflake configuration information (both credentials and resource data) directly tot associated Snowflake resources (*e.g.*, by including the  configuration data within URIs). This library provides a class that extracts Snowflake configuration data and method  parameters from a URI, offering a succint syntax for passing (directly into Snowflake methods) configuration data and/or resource names that are included within URIs.
 
 Package Installation and Usage
 ------------------------------
@@ -32,12 +32,11 @@ The package is available on PyPI::
 
     python -m pip install sfu
 
-The library can be imported in the usual ways::
+The sfu class can be imported with::
 
-    import sfu
-    from sfu import *
+    from sfu import sfu
 
-The library provides methods for extracting configuration data (credentials and non-credentials) from URIs, as in the examples below::
+The class provides methods for extracting configuration data (credentials and non-credentials) from URIs, as in the examples below::
 
     import sfu
     import snowflake.connector
@@ -45,23 +44,41 @@ The library provides methods for extracting configuration data (credentials and 
     # Create a connector client given a URI (for a table in some snowflake database) that
     # includes credentials (a username 'ABC', a password 'XYZ', and an associated account 
     # 'UVW').
-    conn = connector.connect(**sfu.credentials("snow://ABC:XYZ:UVW@DATABASE"))
+    >>> from sfu import sfu
+    >>> s = sfu"snow://ABC:XYZ:UVW@DATABASE"()
+    >>> conn = connector.connect(**s.credentials())
 
     # It can also be useful to bind a connection to some database and some data processing 
     # warehouse, so you don't need to execute cursor commands later. The following will 
     # return a connector client that is configured against DATABASE, using WH for data 
     # processing.
-    uri = "snow://ABC:XYZ:UVW@DATABASE/TABLE@warehouse=WH"
-    c = connector.connect(**sfu.for_connection(uri))
-    cs = c.cursor()
-    cs.execute(f"SELECT col1,col2 FROM {sfu.for_table(uri)}")
+    >>> uri = "snow://ABC:XYZ:UVW@DATABASE/TABLE@warehouse=WH"
+    >>> s = sfu(uri)
+    >>> c = connector.connect(**s.for_connection())
+    >>> cs = c.cursor()
+    >>> cs.execute(f"SELECT col1,col2 FROM {s.for_table()}")
 
     # Note that this is equivalent to the following:
-    c = connector.connect(**sfu.credentials(uri))
-    cs = c.cursor()
-    cs.execute(f"USE DATABASE {sfu.for_db(uri)}")
-    cs.execute(f"USE WAREHOUSE {sfu.for_warehouse(uri)}")
-    cs.execute(f"SELECT col1,col2 FROM {sfu.for_table(uri)}")
+    >>> s = sfu(uri)
+    >>> c = connector.connect(**s.credentials())
+    >>> cs = c.cursor()
+    >>> cs.execute(f"USE DATABASE {s.for_db()}")
+    >>> cs.execute(f"USE WAREHOUSE {s.for_warehouse()}")
+    >>> cs.execute(f"SELECT col1,col2 FROM {s.for_table()}")
+
+Developer Notes
+---------------
+
+Pipenv is used for dependency management of the main library, minus Read the Docs which does not support Pipenv.
+You can install all dependencies with::
+
+    pipenv install --dev
+
+To release a new version of the library, run::
+
+    pipenv run python -m pip install --upgrade build twine
+    pipenv run python -m build
+    twine upload dist/*
 
 Documentation
 -------------
@@ -69,21 +86,20 @@ Documentation
 
 The documentation can be generated automatically from the source files using `Sphinx <https://www.sphinx-doc.org/>`_::
 
+    python -m pip install -e .
     cd docs
     python -m pip install -r requirements.txt
-    sphinx-apidoc -f -E --templatedir=_templates -o _source .. ../setup.py && make html
+    sphinx-apidoc -f -E --templatedir=_templates -o _source .. && make html
 
 Testing and Conventions
 -----------------------
 All unit tests are executed and their coverage is measured when using `pytest <https://pytest.org>`_::
 
-  python -m pip install pytest pytest-cov .
-  python -m pytest --cov=sfu tests/test.py
+  pipenv run python -m pytest --cov=sfu --cov-report term-missing
 
 Style conventions are enforced using `Pylint <https://www.pylint.org/>`_::
 
-  python -m pip install pylint
-  pylint sfu
+  pipenv run python -m flake8 src/sfu
 
 Contributions
 -------------
