@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "cf60d0f212d29b44dd8cdcc7cfde62677bfdeeed1522f03b0562e3ec5ba517f7"
+            "sha256": "6011b3c6ec4532b65d45951a33ea7ca05a1aba026a3f39dc2c0d489b62594c9e"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -22,10 +22,6 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
             "version": "==21.4.0"
-        },
-        "sfu": {
-            "editable": true,
-            "path": "."
         },
         "coverage": {
             "extras": [
@@ -163,13 +159,17 @@
             "index": "pypi",
             "version": "==3.0.0"
         },
+        "sfu": {
+            "editable": true,
+            "path": "."
+        },
         "tomli": {
             "hashes": [
-                "sha256:b5bde28da1fed24b9bd1d4d2b8cba62300bfb4ec9a6187a957e8ddb9434c5224",
-                "sha256:c292c34f58502a1eb2bbb9f5bbc9a5ebc37bee10ffb8c2d6bbdfa8eb13cc14e1"
+                "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
+                "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==2.0.0"
+            "version": "==2.0.1"
         }
     }
 }

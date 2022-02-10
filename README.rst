@@ -38,19 +38,19 @@ The sfu class can be imported with::
 
 The class provides methods for extracting configuration data (credentials and non-credentials) from URIs, as in the examples below::
 
-    import sfu
-    import snowflake.connector
+    >>> from sfu import sfu
+    >>> import snowflake.connector
 
     # Create a connector client given a URI (for a table in some snowflake database) that
-    # includes credentials (a username 'ABC', a password 'XYZ', and an associated account 
+    # includes credentials (a username 'ABC', a password 'XYZ', and an associated account
     # 'UVW').
-    >>> from sfu import sfu
-    >>> s = sfu"snow://ABC:XYZ:UVW@DATABASE"()
+    # Make sure the account contains the region and platform, e.g., xxx.us-east-1.aws.
+    >>> s = sfu("snow://ABC:XYZ:UVW@DATABASE")
     >>> conn = connector.connect(**s.credentials())
 
-    # It can also be useful to bind a connection to some database and some data processing 
-    # warehouse, so you don't need to execute cursor commands later. The following will 
-    # return a connector client that is configured against DATABASE, using WH for data 
+    # It can also be useful to bind a connection to some database and some data processing
+    # warehouse, so you don't need to execute cursor commands later. The following will
+    # return a connector client that is configured against DATABASE, using WH for data
     # processing.
     >>> uri = "snow://ABC:XYZ:UVW@DATABASE/TABLE@warehouse=WH"
     >>> s = sfu(uri)
@@ -78,11 +78,10 @@ To release a new version of the library, run::
 
     pipenv run python -m pip install --upgrade build twine
     pipenv run python -m build
-    twine upload dist/*
+    pipenv run python -m twine upload dist/*
 
 Documentation
 -------------
-.. include:: toc.rst
 
 The documentation can be generated automatically from the source files using `Sphinx <https://www.sphinx-doc.org/>`_::
 
