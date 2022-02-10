@@ -1,4 +1,4 @@
-from sfu import *
+from sfu import sfu
 import pytest
 
 
@@ -338,7 +338,7 @@ def test_configuration_edit(uri: str, safe: bool, edit_key: str, edit_val: str, 
         )
     ]
 )
-def test_connection(uri: str, safe: bool, edit_key: str, edit_val: str, expected: dict):
+def test_connection_edit(uri: str, safe: bool, edit_key: str, edit_val: str, expected: dict):
     test_object = sfu(uri)
 
     setattr(test_object, edit_key, edit_val)
@@ -360,7 +360,7 @@ def test_connection(uri: str, safe: bool, edit_key: str, edit_val: str, expected
          "snow://abc:xyz:123@db/tb?warehouse=wh&p=np")
     ]
 )
-def test_to_string(uri: str, edit_key: str, edit_val: str, expected: str):
+def test_to_string_edit(uri: str, edit_key: str, edit_val: str, expected: str):
     test_object = sfu(uri)
 
     setattr(test_object, edit_key, edit_val)
